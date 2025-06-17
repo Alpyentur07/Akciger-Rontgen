@@ -1,0 +1,161 @@
+<div class="container-fluid hospital-theme min-vh-100 py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12 text-center hospital-header py-3 rounded-card">
+        <h1>Akciğer Röntgeni Analiz Sistemi</h1>
+        <p class="lead">Yapay zeka destekli akciğer röntgeni analiz uygulaması</p>
+        
+        <!-- Server status indicator -->
+        <div *ngIf="checkingServer" class="badge bg-warning text-white mt-2">
+          <i class="bi bi-hourglass-split me-1"></i> Sunucu kontrol ediliyor...
+        </div>
+        <div *ngIf="!checkingServer && isServerAvailable" class="badge bg-success text-white mt-2">
+          <i class="bi bi-check-circle-fill me-1"></i> Sunucu çalışıyor
+        </div>
+        <div *ngIf="!checkingServer && !isServerAvailable" class="badge bg-danger text-white mt-2">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i> Sunucu bağlantısı yok
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="error" class="row mb-4">
+      <div class="col-12">
+        <div class="alert alert-danger d-flex align-items-center">
+          <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+          <div class="flex-grow-1">{{ error }}</div>
+          <button class="btn btn-sm btn-outline-danger" (click)="retry()">
+            <i class="bi bi-arrow-clockwise me-1"></i> Yeniden Dene
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-6 mb-4">
+        <div class="card rounded-card h-100">
+          <div class="card-header bg-primary text-white">
+            <h4>Röntgen Yükleme</h4>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="xray-upload" class="form-label">Akciğer röntgeni yükleyin</label>
+              <input class="form-control" type="file" id="xray-upload" accept="image/*" (change)="onFileSelected($event)">
+            </div>
+            
+            <div *ngIf="imagePreview" class="text-center mb-3">
+              <img [src]="imagePreview" class="img-fluid rounded" alt="Yüklenen röntgen" style="max-height: 300px;">
+            </div>
+            
+            <button class="btn btn-primary w-100" [disabled]="!imagePreview || isLoading || !isServerAvailable" (click)="onSubmit()">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ isLoading ? 'Analiz ediliyor...' : 'Analiz Et' }}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6 mb-4">
+        <div class="card rounded-card h-100">
+          <div class="card-header bg-primary text-white">
+            <h4>Analiz Sonuçları</h4>
+          </div>
+          <div class="card-body">
+            <div *ngIf="!result && !isLoading" class="text-center py-5">
+              <i class="bi bi-clipboard-data" style="font-size: 3rem; color: #ccc;"></i>
+              <p class="mt-3">Sonuçlar burada görüntülenecek.</p>
+              <p class="text-muted small">Bir röntgen yükleyip "Analiz Et" butonuna tıklayın.</p>
+            </div>
+            
+            <div *ngIf="isLoading" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Yükleniyor...</span>
+              </div>
+              <p class="mt-3">Röntgeniniz analiz ediliyor...</p>
+            </div>
+            
+            <div *ngIf="result" class="py-2">
+              <h5 class="mb-4 text-center">Tahmin Sonuçları</h5>
+              
+              <!-- Normal -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Normal</span>
+                  <span>{{ result.predictions.normal.toFixed(2) }}%</span>
+                </div>
+                <div class="progress" style="height: 20px;">
+                  <div class="progress-bar" 
+                       [ngClass]="getProgressBarClass(result.predictions.normal)"
+                       role="progressbar" 
+                       [style.width.%]="result.predictions.normal"
+                       aria-valuemin="0" 
+                       aria-valuemax="100"
+                       [attr.aria-valuenow]="result.predictions.normal">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- COVID-19 -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>COVID-19</span>
+                  <span>{{ result.predictions.covid.toFixed(2) }}%</span>
+                </div>
+                <div class="progress" style="height: 20px;">
+                  <div class="progress-bar" 
+                       [ngClass]="getProgressBarClass(result.predictions.covid)"
+                       role="progressbar" 
+                       [style.width.%]="result.predictions.covid"
+                       aria-valuemin="0" 
+                       aria-valuemax="100"
+                       [attr.aria-valuenow]="result.predictions.covid">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tüberküloz -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Tüberküloz</span>
+                  <span>{{ result.predictions.tuberculosis.toFixed(2) }}%</span>
+                </div>
+                <div class="progress" style="height: 20px;">
+                  <div class="progress-bar" 
+                       [ngClass]="getProgressBarClass(result.predictions.tuberculosis)"
+                       role="progressbar" 
+                       [style.width.%]="result.predictions.tuberculosis"
+                       aria-valuemin="0" 
+                       aria-valuemax="100"
+                       [attr.aria-valuenow]="result.predictions.tuberculosis">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Zatürre -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Zatürre</span>
+                  <span>{{ result.predictions.pneumonia.toFixed(2) }}%</span>
+                </div>
+                <div class="progress" style="height: 20px;">
+                  <div class="progress-bar" 
+                       [ngClass]="getProgressBarClass(result.predictions.pneumonia)"
+                       role="progressbar" 
+                       [style.width.%]="result.predictions.pneumonia"
+                       aria-valuemin="0" 
+                       aria-valuemax="100"
+                       [attr.aria-valuenow]="result.predictions.pneumonia">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="alert alert-info mt-4">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                Bu sonuçlar yalnızca bilgi amaçlıdır ve tıbbi tavsiye niteliği taşımaz. Lütfen kesin teşhis için bir doktora başvurunuz.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
