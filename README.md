@@ -1,59 +1,106 @@
-# Akciğer Röntgen (Lung X-Ray) Uygulaması
+# Akciğer Röntgen Sınıflandırma Projesi (BEiT Transformer Modeli)
 
-> **Açıklama:** Bu proje, **lung-xray-app** başta olmak üzere frontend ve backend bileşenlerinden oluşan, akciğer röntgeni analizi ve görselleştirmesi üzerine geliştirilmiş bir web uygulamasıdır.
-
----
-
-## ​ İçindekiler
-- [Proje Hakkında](#%EF%B8%8F-proje-hakkında)
-- [Özellikler](#-özellikler)
-- [Teknolojiler](#-teknolojiler)
-- [Kurulum & Kullanım](#-kurulum--kullanım)
-- [Geliştirme Süreci](#-geliştirme-süreci)
-- [Katkıda Bulunanlar](#-katkıda-bulunanlar)
-- [Lisans](#-lisans)
-- [İletişim](#-iletişim)
+Bu proje, akciğer röntgen (X-Ray) görüntülerinde çeşitli hastalıkları sınıflandırmak için **BEiT** (Bidirectional Encoder representation from Image Transformers) modeli kullanır.  
+Proje, **Python/Flask backend** ve **React frontend** bileşenlerinden oluşmaktadır.
 
 ---
 
-##  Proje Hakkında
-"Akciğer Röntgen" projesi, akciğer röntgen görüntülerini analiz eden ve sonuçlarını kullanıcı dostu bir arayüzde sunan bir uygulamadır.  
-Proje, frontend ve backend olarak ayrılmış modüler bir mimaride geliştirilmiştir:
-- **Frontend**: `frontend/lung-xray-app` — Görüntü yükleme, işleme ve sonuçların görselleştirilmesi.
-- **Backend**: `backend` — Görüntü işleme modelleri, API yönetimi, veritabanı entegrasyonu.
+## 📌 Özellikler
 
-Uygulama, sağlık alanında yapay zeka destekli röntgen analizleri isteyen kullanıcılar veya araştırmacılar için güçlü bir başlangıç noktasıdır.
-
----
-
-##  Özellikler
-- Röntgen görüntüsü yükleyerek otomatik analiz
-- Anomali tespiti ve görsel geri bildirim
-- Hassas sonuç gösterimi ve raporlama
-- Geliştirilmeye açık ve ölçeklenebilir yapı
-
-> *Not: Model doğruluğu, eğitim verisi ve optimizasyonlar geliştirme aşamasında artırılabilir.*
+- **Model:** BEiT Transformer ile ince ayarlanmış derin öğrenme modeli kullanılarak akciğer röntgen görüntülerinde aşağıdaki sınıflar tespit edilir:
+  - **Sağlıklı**
+  - **COVID-19**
+  - **Pnömoni**
+  - **Tüberküloz**
+- **Backend (Flask):**
+  - Yüklenen görüntünün geçerli bir akciğer röntgeni olup olmadığını doğrular.
+  - Sınıflandırma işlemini yapar ve sonuçları **JSON formatında** döndürür.
+- **Frontend (React):**
+  - Kullanıcı dostu bir arayüz sağlar.
+  - Görüntü yükleme ve sınıflandırma sonuçlarının görüntülenmesi.
+  - **Chart.js** ile sınıflandırma olasılıklarının görselleştirilmesi.
+  - Her hastalık sınıfı hakkında bilgilendirici içerik sunar.
 
 ---
 
-##  Teknolojiler
-| Katman      | Teknoloji / Araç        |
-|-------------|-------------------------|
-| Frontend    | React, TypeScript, SCSS |
-| Backend     | Python, Flask veya FastAPI |
-| ML Modeli   | PyTorch / TensorFlow (opsiyonel) |
-| Stil        | SCSS                    |
+## ⚙️ Kurulum
 
----
+Projeyi yerel ortamınızda çalıştırmak için:
 
-##  Kurulum & Kullanım
-
-###  Gereksinimler
-- Node.js ≥ 16.x
-- Python ≥ 3.8
-- (Opsiyonel) Sanal ortam: `venv`
-
-### Adım 1: Depoyu klonlayın
+### 1️⃣ Depoyu Klonlayın
 ```bash
 git clone https://github.com/Alpyentur07/Akciger-Rontgen.git
 cd Akciger-Rontgen
+2️⃣ Backend Kurulumu
+bash
+Kopyala
+Düzenle
+cd backend
+pip install -r requirements.txt
+Model Ağırlıkları: lung_model.pth dosyasının backend klasöründe bulunduğundan emin olun.
+
+API Anahtarı (Opsiyonel): Eğer görüntü doğrulaması için harici bir API kullanıyorsanız, app.py dosyasındaki API_KEY alanına kendi anahtarınızı ekleyin.
+
+3️⃣ Frontend Kurulumu
+bash
+Kopyala
+Düzenle
+cd ../frontend
+npm install
+🚀 Çalıştırma
+Backend'i Başlatın
+bash
+Kopyala
+Düzenle
+cd backend
+python app.py
+Backend varsayılan olarak http://localhost:5000 adresinde çalışır.
+
+Frontend'i Başlatın
+bash
+Kopyala
+Düzenle
+cd frontend
+npm start
+Frontend varsayılan olarak http://localhost:3000 adresinde çalışır.
+
+Tarayıcıdan http://localhost:3000 adresine giderek uygulamayı kullanabilirsiniz.
+
+🖥 Kullanım
+"Röntgen Görüntüsü Yükle" alanına bir akciğer röntgeni (.jpg, .png, .bmp, .tif) yükleyin.
+
+"Analizi Başlat" butonuna tıklayın.
+
+Sistem:
+
+Görüntünün geçerli bir akciğer röntgeni olup olmadığını kontrol eder.
+
+BEiT modeli ile sınıflandırma yapar.
+
+Sonuçlar:
+
+Hastalık sınıfı
+
+Tahmin olasılıkları (grafik ile)
+
+Hastalık hakkında kısa bilgi
+
+⚠️ Önemli Not: Bu uygulama yalnızca eğitim ve demo amaçlıdır. Tıbbi teşhis için kullanılmamalıdır. Her zaman bir sağlık uzmanına danışınız.
+
+📊 Model Eğitimi
+Eğitim için backend/ModelTrain.ipynb dosyası kullanılabilir.
+
+Kullanılan veri seti: [Kaggle Chest X-Ray Dataset] veya benzeri açık kaynaklı veri setleri.
+
+Notebook, veri ön işleme, model tanımlama, eğitim süreci ve ağırlık kaydetme adımlarını içerir.
+
+Model Performansı (Örnek)
+Epoch	Train Loss	Train Accuracy	Val Loss	Val Accuracy	F1 Score
+1	~0.45	~82%	~0.38	~85%	~0.84
+2	~0.30	~90%	~0.26	~92%	~0.91
+3	~0.20	~94%	~0.18	~95%	~0.95
+4	~0.15	~96%	~0.15	~96.5%	~0.96
+5	~0.10	~97%	~0.12	~97.5%	~0.97
+
+📷 Ekran Görüntüleri
+
