@@ -1,6 +1,6 @@
 # Akciğer Röntgen Sınıflandırma Projesi (BEiT Transformer Modeli)
 
-Bu proje, akciğer röntgen (X-Ray) görüntülerinde çeşitli hastalıkları sınıflandırmak için **BEiT** (Bidirectional Encoder representation from Image Transformers) modeli kullanır.  
+Bu proje, akciğer röntgen (X-Ray) görüntülerinde çeşitli hastalıkları sınıflandırmak için **BEiT** (*Bidirectional Encoder representation from Image Transformers*) modeli kullanır.  
 Proje, **Python/Flask backend** ve **React frontend** bileşenlerinden oluşmaktadır.
 
 ---
@@ -8,10 +8,10 @@ Proje, **Python/Flask backend** ve **React frontend** bileşenlerinden oluşmakt
 ## 📌 Özellikler
 
 - **Model:** BEiT Transformer ile ince ayarlanmış derin öğrenme modeli kullanılarak akciğer röntgen görüntülerinde aşağıdaki sınıflar tespit edilir:
-  - **Sağlıklı**
-  - **COVID-19**
-  - **Pnömoni**
-  - **Tüberküloz**
+  - Sağlıklı
+  - COVID-19
+  - Pnömoni
+  - Tüberküloz
 - **Backend (Flask):**
   - Yüklenen görüntünün geçerli bir akciğer röntgeni olup olmadığını doğrular.
   - Sınıflandırma işlemini yapar ve sonuçları **JSON formatında** döndürür.
@@ -23,7 +23,7 @@ Proje, **Python/Flask backend** ve **React frontend** bileşenlerinden oluşmakt
 
 ---
 
-## ⚙️ Kurulum
+## ⚙ Kurulum
 
 Projeyi yerel ortamınızda çalıştırmak için:
 
@@ -31,83 +31,88 @@ Projeyi yerel ortamınızda çalıştırmak için:
 ```bash
 git clone https://github.com/Alpyentur07/Akciger-Rontgen.git
 cd Akciger-Rontgen
-2️⃣ Backend Kurulumu
-bash
-Kopyala
-Düzenle
+```
+
+### 2️⃣ Backend Kurulumu
+```bash
 cd backend
 pip install -r requirements.txt
-Model Ağırlıkları: lung_model.pth dosyasının backend klasöründe bulunduğundan emin olun.
+```
+- **Model Ağırlıkları:** `lung_model.pth` dosyasının `backend` klasöründe bulunduğundan emin olun.
+- **API Anahtarı (Opsiyonel):** Eğer görüntü doğrulaması için harici bir API kullanıyorsanız, `app.py` dosyasındaki `API_KEY` alanına kendi anahtarınızı ekleyin.
 
-API Anahtarı (Opsiyonel): Eğer görüntü doğrulaması için harici bir API kullanıyorsanız, app.py dosyasındaki API_KEY alanına kendi anahtarınızı ekleyin.
-
-3️⃣ Frontend Kurulumu
-bash
-Kopyala
-Düzenle
+### 3️⃣ Frontend Kurulumu
+```bash
 cd ../frontend
 npm install
-🚀 Çalıştırma
-Backend'i Başlatın
-bash
-Kopyala
-Düzenle
+```
+
+---
+
+## 🚀 Çalıştırma
+
+### Backend'i Başlatın
+```bash
 cd backend
 python app.py
-Backend varsayılan olarak http://localhost:5000 adresinde çalışır.
+```
+Backend varsayılan olarak **http://localhost:5000** adresinde çalışır.
 
-Frontend'i Başlatın
-bash
-Kopyala
-Düzenle
+### Frontend'i Başlatın
+```bash
 cd frontend
 npm start
-Frontend varsayılan olarak http://localhost:3000 adresinde çalışır.
+```
+Frontend varsayılan olarak **http://localhost:3000** adresinde çalışır.
 
-Tarayıcıdan http://localhost:3000 adresine giderek uygulamayı kullanabilirsiniz.
+Tarayıcıdan **http://localhost:3000** adresine giderek uygulamayı kullanabilirsiniz.
 
-🖥 Kullanım
-"Röntgen Görüntüsü Yükle" alanına bir akciğer röntgeni (.jpg, .png, .bmp, .tif) yükleyin.
+---
 
-"Analizi Başlat" butonuna tıklayın.
+## 🖥 Kullanım
 
-Sistem:
+1. **"Röntgen Görüntüsü Yükle"** alanına bir akciğer röntgeni (.jpg, .png, .bmp, .tif) yükleyin.
+2. **"Analizi Başlat"** butonuna tıklayın.
+3. Sistem:
+   - Görüntünün geçerli bir akciğer röntgeni olup olmadığını kontrol eder.
+   - BEiT modeli ile sınıflandırma yapar.
+4. Sonuçlar:
+   - Hastalık sınıfı
+   - Tahmin olasılıkları (grafik ile)
+   - Hastalık hakkında kısa bilgi
 
-Görüntünün geçerli bir akciğer röntgeni olup olmadığını kontrol eder.
+⚠ **Önemli Not:** Bu uygulama yalnızca eğitim ve demo amaçlıdır. Tıbbi teşhis için kullanılmamalıdır. Her zaman bir sağlık uzmanına danışınız.
 
-BEiT modeli ile sınıflandırma yapar.
+---
 
-Sonuçlar:
+## 📊 Model Eğitimi
 
-Hastalık sınıfı
+- Eğitim için `backend/ModelTrain.ipynb` dosyası kullanılabilir.
+- Kullanılan veri seti: [Kaggle Chest X-Ray Dataset] veya benzeri açık kaynaklı veri setleri.
+- Notebook, veri ön işleme, model tanımlama, eğitim süreci ve ağırlık kaydetme adımlarını içerir.
 
-Tahmin olasılıkları (grafik ile)
+**Model Performansı (Örnek)**
 
-Hastalık hakkında kısa bilgi
+| Epoch | Train Loss | Train Accuracy | Val Loss | Val Accuracy | F1 Score |
+|-------|------------|----------------|----------|--------------|----------|
+| 1     | ~0.45      | ~82%           | ~0.38    | ~85%         | ~0.84    |
+| 2     | ~0.30      | ~90%           | ~0.26    | ~92%         | ~0.91    |
+| 3     | ~0.20      | ~94%           | ~0.18    | ~95%         | ~0.95    |
+| 4     | ~0.15      | ~96%           | ~0.15    | ~96.5%       | ~0.96    |
+| 5     | ~0.10      | ~97%           | ~0.12    | ~97.5%       | ~0.97    |
 
-⚠️ Önemli Not: Bu uygulama yalnızca eğitim ve demo amaçlıdır. Tıbbi teşhis için kullanılmamalıdır. Her zaman bir sağlık uzmanına danışınız.
+---
 
-📊 Model Eğitimi
-Eğitim için backend/ModelTrain.ipynb dosyası kullanılabilir.
+## 📷 Ekran Görüntüleri
 
-Kullanılan veri seti: [Kaggle Chest X-Ray Dataset] veya benzeri açık kaynaklı veri setleri.
+Uygulamanın başlangıç arayüzü ve kullanıcıların MR görüntülerini yükleyebileceği bölüm:
 
-Notebook, veri ön işleme, model tanımlama, eğitim süreci ve ağırlık kaydetme adımlarını içerir.
+<img width="1583" height="847" alt="image" src="https://github.com/user-attachments/assets/f6b84102-5262-4086-8d87-945fedf5ae22" />
 
-Model Performansı (Örnek)
-Epoch	Train Loss	Train Accuracy	Val Loss	Val Accuracy	F1 Score
-1	~0.45	~82%	~0.38	~85%	~0.84
-2	~0.30	~90%	~0.26	~92%	~0.91
-3	~0.20	~94%	~0.18	~95%	~0.95
-4	~0.15	~96%	~0.15	~96.5%	~0.96
-5	~0.10	~97%	~0.12	~97.5%	~0.97
+Analiz Sonuçları 
+Yüklenen görüntünün analiz edilmesi sonucunda elde edilen Hastalık sınıflandırması, güven skoru, olasılık dağılımları
 
-###📷 Ekran Görüntüleri
-<img width="1665" height="852" alt="image" src="https://github.com/user-attachments/assets/abd771da-9977-4293-8825-878feb274235" />
-
-<img width="1631" height="854" alt="image" src="https://github.com/user-attachments/assets/77e82559-ce36-4045-9013-8ab451b15624" />
-
-<img width="1637" height="835" alt="image" src="https://github.com/user-attachments/assets/184e41b6-1546-4e65-8e15-49f3f1965b58" />
+<img width="1432" height="802" alt="image" src="https://github.com/user-attachments/assets/0297c04c-112a-4ca8-98be-6e55d1a774e2" />
 
 
 
