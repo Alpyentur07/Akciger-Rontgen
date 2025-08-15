@@ -102,5 +102,13 @@ Epoch	Train Loss	Train Accuracy	Val Loss	Val Accuracy	F1 Score
 4	~0.15	~96%	~0.15	~96.5%	~0.96
 5	~0.10	~97%	~0.12	~97.5%	~0.97
 
-📷 Ekran Görüntüleri
+###📷 Ekran Görüntüleri
+<img width="1665" height="852" alt="image" src="https://github.com/user-attachments/assets/abd771da-9977-4293-8825-878feb274235" />
+
+<img width="1631" height="854" alt="image" src="https://github.com/user-attachments/assets/77e82559-ce36-4045-9013-8ab451b15624" />
+
+<img width="1637" height="835" alt="image" src="https://github.com/user-attachments/assets/184e41b6-1546-4e65-8e15-49f3f1965b58" />
+
+
+
 
